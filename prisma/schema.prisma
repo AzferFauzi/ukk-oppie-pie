@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(100)
+  alamat    String   @db.VarChar(100)
+  no_telp   Int
+  createAt  DateTime @default(now())
+}
+
+model Product {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  stock      Int?
+  price      Int
+  createAt   DateTime  @default(now())
+
+  // Relasi
+  categoryId Int
+  category   Category  @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(50)
+  createAt  DateTime   @default(now())
+
+  // Relasi (1 Category punya banyak Product)
+  products  Product[]
+}
+
+
