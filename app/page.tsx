@@ -1,18 +1,17 @@
-import React from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero'; // Tambahkan komponen Hero
+// app/page.tsx
 
-function App() {
+import Navbar from './components/Navbar'; // Pastikan file ini ada
+import Hero from './components/Hero';     // Pastikan file ini ada
+import Footer from './components/Footer'; // Pastikan file ini ada
+
+// ini adalah komponen utama halaman depan (home)
+export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
+      {/* memanggil komponen navigasi, hero banner, dan footer */}
       <Navbar />
-      <Hero /> {/* Tambahkan Hero di sini */}
-      {/* Konten halaman lainnya akan ditambahkan nanti */}
-      <main className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold">Selamat datang di OPPIE PIE!</h1>
-      </main>
+      <Hero />
+      <Footer />
     </div>
   );
 }
-
-export default App;

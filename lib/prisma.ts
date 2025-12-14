@@ -1,4 +1,6 @@
-import { PrismaClient } from "../app/generated/prisma";
+// lib/prisma.ts
+
+import { PrismaClient } from "@prisma/client"; // ✅ Path default
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

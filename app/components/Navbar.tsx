@@ -1,47 +1,90 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { FaStore, FaShoppingCart, FaUser } from 'react-icons/fa';
-import Link from 'next/link'; // Import Link dari Next.js
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-import Logo from '@/assets/logo-Photoroom.png'
+import { IoStorefrontOutline, IoCartOutline, IoPersonOutline } from 'react-icons/io5';
+const Logo = "/assets/logo-Photoroom.png";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    checkUserRole();
+  }, []);
+
+  const checkUserRole = async () => {
+    try {
+      const response = await fetch('/api/auth/me');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.user?.role === 'ADMIN') {
+          setIsAdmin(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking user role:', error);
+    }
+  };
+
   return (
-    <header className="bg-white border-t-4 border-blue-500 shadow-sm">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo dengan Link ke Home */}
-        <Link href="/" className="flex items-center space-x-2">
-          <Image
-          alt='logo'
-          src={Logo}
-          className='h-10 w-10'/>
-          <span className="font-bold text-lg text-gray-800">OPPIE PIE</span>
-        </Link>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo + Nama Toko */}
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            {/* Gambar Logo */}
+            <div className="relative w-12 h-12 md:w-14 md:h-14  rounded flex-shrink-0">
+              <Image
+                src={Logo}
+                alt="Oppie Pie Logo"
+                fill
+                className="object-cover rounded"
+                onError={(e) => {
+                  const target = e.currentTarget as HTMLImageElement;
+                  target.style.backgroundColor = '#e5e7eb';
+                }}
+              />
+            </div>
 
-        {/* Icon Navigasi */}
-        <div className="flex items-center space-x-4">
-          <button 
-            className="text-gray-700 hover:text-blue-600 transition-colors focus:outline-none"
-            aria-label="Toko"
-          >
-            <FaStore size={20} />
-          </button>
-          <button 
-            className="text-gray-700 hover:text-blue-600 transition-colors focus:outline-none"
-            aria-label="Keranjang"
-          >
-            <FaShoppingCart size={20} />
-          </button>
-          <button 
-            className="text-gray-700 hover:text-blue-600 transition-colors focus:outline-none"
-            aria-label="Profil"
-          >
-            <FaUser size={20} />
-          </button>
+            {/* Nama Toko */}
+            <span className="text-xl md:text-2xl font-bold text-gray-900 tracking-wide">
+              OPPIE PIE
+            </span>
+          </Link>
+
+          {/* Ikon di Sebelah Kanan */}
+          <div className="flex items-center gap-4 md:gap-6">
+            {/* Ikon Store */}
+            <Link
+              href="/menu"
+              className="hover:scale-110 transition-transform"
+              aria-label="Store"
+            >
+              <IoStorefrontOutline className="w-6 h-6 md:w-7 md:h-7 text-gray-800" />
+            </Link>
+
+            {/* Ikon Cart */}
+            <Link
+              href="/cart"
+              className="hover:scale-110 transition-transform"
+              aria-label="Cart"
+            >
+              <IoCartOutline className="w-6 h-6 md:w-7 md:h-7 text-gray-800" />
+            </Link>
+
+            {/* Ikon User */}
+            <Link
+              href={isAdmin ? "/admin/dashboard" : "/profile"}
+              className="hover:scale-110 transition-transform"
+              aria-label={isAdmin ? "Admin Dashboard" : "User Profile"}
+            >
+              <IoPersonOutline className="w-6 h-6 md:w-7 md:h-7 text-gray-800" />
+            </Link>
+          </div>
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 
